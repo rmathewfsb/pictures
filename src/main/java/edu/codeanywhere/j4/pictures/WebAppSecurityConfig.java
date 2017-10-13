@@ -20,6 +20,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.AuthenticationEntryPoint;
 
 /**
  * WebAppSecurityConfig.
@@ -33,12 +34,18 @@ public class WebAppSecurityConfig extends WebSecurityConfigurerAdapter
     
     @Value("${sec.authorized.role}")
     private String authorizedRole;
+    
+    @Autowired
+    private AuthenticationEntryPoint authEntryPoint;
+    
+    
     @Override
     protected void configure(final HttpSecurity httpSecurity) throws Exception
     {
         httpSecurity.authorizeRequests().antMatchers("/anonymous/**").permitAll()
         .anyRequest().authenticated()
         .and().httpBasic()
+        .authenticationEntryPoint(authEntryPoint)
         .and()
         .csrf().disable();
     }
@@ -49,5 +56,7 @@ public class WebAppSecurityConfig extends WebSecurityConfigurerAdapter
             .inMemoryAuthentication()
                 .withUser("j4user").password("jjjj").roles("USER");
     }
+    
+    
 }
 
