@@ -60,7 +60,7 @@ public class PictureRestControllerIntegrationTest
      
         createTestPicture("Joel");
      
-        mvc.perform(get("/api/employees")
+        mvc.perform(get("/pic/Joel")
           .contentType(MediaType.APPLICATION_JSON))
           .andExpect(status().isOk())
           .andExpect(content()

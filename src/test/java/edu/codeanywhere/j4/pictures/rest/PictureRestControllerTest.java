@@ -54,7 +54,7 @@ public class PictureRestControllerTest
         
         when(pictureService.findPicture("jess")).thenReturn(pic);
         
-        mvc.perform(get("/api/employees")
+        mvc.perform(get("/pic/Jess")
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$", hasSize(1)))
