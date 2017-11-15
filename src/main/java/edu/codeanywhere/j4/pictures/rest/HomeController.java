@@ -1,28 +1,21 @@
-/*
- *    Copyright &copy; Flagstar Bank 2017.
- *
- *    Copyright in the application source code, and in the information and
- *    material therein and in their arrangement, is owned by Flagstar Bank, FSB
- *    unless otherwise indicated.
- *
- *    You shall not remove or obscure any copyright, trademark or other notices.
- *    You may not copy, republish, redistribute, transmit, participate in the
- *    transmission of, create derivatives of, alter edit or exploit in any
- *    manner any material including by storage on retrieval systems, without the
- *    express written permission of Flagstar Bank.
- */
-
 package edu.codeanywhere.j4.pictures.rest;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import edu.codeanywhere.j4.pictures.persistence.MongoUserDetails;
+import edu.codeanywhere.j4.pictures.service.PictureUserDetailService;
 
 /**
  * TODO This class ___
@@ -33,12 +26,27 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/home")
 public class HomeController
 {
+    @Autowired
+    PictureUserDetailService pictureUserDetailsService;
+    
     @RequestMapping(value = "/greet", method =
     { RequestMethod.GET })
     public String welcomeUser()
     {
         return "Welcome!";
     }
+    
+    @RequestMapping(value = "/signup", method =
+    { RequestMethod.POST })
+    public String signupUser(@RequestBody final MongoUserDetails userDetails) throws Exception
+    {
+        if (userDetails == null)
+        {
+            throw new Exception("Invalid input!");
+        }
+        MongoUserDetails storedUserDetails = pictureUserDetailsService.saveUserDetails(userDetails);
+        return "Welcome! " + userDetails.getUsername();
+    }    
 
     /**
      * This method ___
